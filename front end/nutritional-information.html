@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodlib - Nutritional Information</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #d32f2f; /* Dark red header background */
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #fff; /* White header text */
+            font-size: 2em;
+            margin: 0;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        /* Styling for the nutritional information UI */
+        .nutritional-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        input {
+            width: 60%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1em;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #b71c1c;
+        }
+
+        /* Styling for the nutritional information display */
+        .nutritional-info {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Nutritional Information</h1>
+    </header>
+
+    <p>Get detailed nutritional data for each recipe, empowering you to make informed choices about your meals. Suitable for calorie counting, macro tracking, and adherence to specific dietary plans.</p>
+
+    <!-- Nutritional Information UI -->
+    <div class="nutritional-container">
+        <input type="text" placeholder="Enter ingredients separated by commas...">
+        <button onclick="getNutritionalInfo()">Get Nutritional Info</button>
+    </div>
+
+    <!-- Nutritional Information Display Section -->
+    <div class="nutritional-info" id="nutritional-info">
+        <!-- Nutritional information will appear here dynamically -->
+    </div>
+
+    <script>
+        // Dummy function to simulate nutritional information retrieval
+        function getNutritionalInfo() {
+            const nutritionalInfo = {
+                calories: 350,
+                protein: 25,
+                carbs: 40,
+                fat: 12,
+                fiber: 5,
+            };
+            const nutritionalInfoContainer = document.getElementById("nutritional-info");
+
+            // Clear previous information
+            nutritionalInfoContainer.innerHTML = "";
+
+            // Display nutritional information
+            const ul = document.createElement("ul");
+            for (const [nutrient, value] of Object.entries(nutritionalInfo)) {
+                const li = document.createElement("li");
+                li.textContent = `${nutrient}: ${value}g`;
+                ul.appendChild(li);
+            }
+
+            nutritionalInfoContainer.appendChild(ul);
+        }
+    </script>
+
+    <!-- Add more content and styling as needed -->
+
+</body>
+</html>
