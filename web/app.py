@@ -24,6 +24,11 @@ class Recipe(db.Model):
     ingredients = db.Column(db.String(500))
     recipe_data = db.Column(db.JSON)
 
+class Nutrition(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nutrition = db.Column(db.String(500))
+    nutition_data = db.Column(db.JSON)
+
 oauth = OAuth(app)
 google = oauth.remote_app(
     'google',
@@ -77,7 +82,7 @@ def generate_recipe():
         app_id = app.config['RECIPE_SEARCH_ID']
         app_key = app.config['RECIPE_SEARCH_KEY']
         ingredients = request.form.get('ingredients')
-        recipe_data = requests.get(f'https://api.edamam.com/api/recipes/v2?q={ingredients}&app_id={app_id}&app_key={app_key}').json()
+        recipe_data = requests.get(f'https://api.edamam.com/api/recipes/v2?type=public&q={ingredients}&app_id={app_id}&app_key={app_key}').json()
 
         new_recipe = Recipe(ingredients=ingredients, recipe_data=recipe_data)
         db.session.add(new_recipe)
@@ -87,13 +92,20 @@ def generate_recipe():
 
     return render_template('index.html')
 
-# @app.route('/generate_nutrition', methods=['GET', 'POST'])
-# def generate_nutrition():
-#     if request.method == 'POST':
-#         app_id = app.config['NUTRITION_SEARCH_ID']
-#         app_key = app.config['NUTRITION_SEARCH_KEY']
-#         nutrition = request.form.get('nutrition')
-#         nutrition_data = requests.get(f'https://api.edamam.com/search?q={nutrition}&app_id={app_id}&app_key={app_key}').json()
+@app.route('/generate_nutrition', methods=['GET', 'POST'])
+def generate_nutrition():
+    if request.method == 'POST':
+        app_id = app.config['NUTRITION_SEARCH_ID']
+        app_key = app.config['NUTRITION_SEARCH_KEY']
+        nutrition = request.form.get('nutrition')
+        nutrition_data = requests.get(f'https://api.edamam.com/api/nutrition-data?q={nutrition}&app_id={app_id}&app_key={app_key}').json()
+
+        new_nutrition = Nutrition(nutrition=nutrition, nutrition_data=nutrition_data)
+        db.session.add(new_nutrition)
+        db.session.commit()
+
+        return render_template('nutrition_result.html', nutrition_data=nutrition_data)
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
