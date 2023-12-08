@@ -11,6 +11,10 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['GOOGLE_ID'] = os.getenv('GOOGLE_ID')
 app.config['GOOGLE_SECRET'] = os.getenv('GOOGLE_SECRET')
+app.config['RECIPE_SEARCH_ID'] = os.getenv('RECIPE_SEARCH_ID')
+app.config['RECIPE_SEARCH_KEY'] = os.getenv('RECIPE_SEARCH_KEY')
+app.config['NUTRITION_SEARCH_ID'] = os.getenv('NUTRITION_SEARCH_ID')
+app.config['NUTRITION_SEARCH_KEY'] = os.getenv('NUTRITION_SEARCH_KEY')
 
 db = SQLAlchemy(app)
 
