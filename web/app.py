@@ -22,7 +22,7 @@ db = SQLAlchemy(app)
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ingredients = db.Column(db.String(500))
-    edamam_data = db.Column(db.JSON)
+    recipe_data = db.Column(db.JSON)
 
 oauth = OAuth(app)
 google = oauth.remote_app(
@@ -74,16 +74,27 @@ def get_google_oauth_token():
 @app.route('/generate_recipe', methods=['GET', 'POST'])
 def generate_recipe():
     if request.method == 'POST':
+        app_id = app.config['RECIPE_SEARCH_ID']
+        app_key = app.config['RECIPE_SEARCH_KEY']
         ingredients = request.form.get('ingredients')
-        edamam_data = requests.get(f'https://api.edamam.com/search?q={ingredients}&app_id=YOUR_APP_ID&app_key=YOUR_APP_KEY').json()
+        recipe_data = requests.get(f'https://api.edamam.com/api/recipes/v2?q={ingredients}&app_id={app_id}&app_key={app_key}').json()
 
-        new_recipe = Recipe(ingredients=ingredients, edamam_data=edamam_data)
+        new_recipe = Recipe(ingredients=ingredients, recipe_data=recipe_data)
         db.session.add(new_recipe)
         db.session.commit()
 
-        return render_template('recipe_result.html', edamam_data=edamam_data)
+        return render_template('recipe_result.html', recipe_data=recipe_data)
 
     return render_template('index.html')
+
+# @app.route('/generate_nutrition', methods=['GET', 'POST'])
+# def generate_nutrition():
+#     if request.method == 'POST':
+#         app_id = app.config['NUTRITION_SEARCH_ID']
+#         app_key = app.config['NUTRITION_SEARCH_KEY']
+#         nutrition = request.form.get('nutrition')
+#         nutrition_data = requests.get(f'https://api.edamam.com/search?q={nutrition}&app_id={app_id}&app_key={app_key}').json()
+
 
 if __name__ == '__main__':
     app.run(debug=True)
