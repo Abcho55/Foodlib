@@ -1,17 +1,24 @@
-from curses import flash
-from flask import Flask, render_template, request, redirect, url_for, session
-from flask_pymongo import PyMongo
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_sqlalchemy import SQLAlchemy
 from flask_oauthlib.client import OAuth
 import requests
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/your_database_name'
-app.config['GOOGLE_ID'] = 'your_google_client_id'
-app.config['GOOGLE_SECRET'] = 'your_google_client_secret'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['GOOGLE_ID'] = os.getenv('GOOGLE_ID')
+app.config['GOOGLE_SECRET'] = os.getenv('GOOGLE_SECRET')
 
-mongo = PyMongo(app)
+db = SQLAlchemy(app)
+
+# Define the Recipe model
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ingredients = db.Column(db.String(500))
+    edamam_data = db.Column(db.JSON)
 
 oauth = OAuth(app)
 google = oauth.remote_app(
@@ -53,7 +60,6 @@ def authorized():
 
     session['google_token'] = (response['access_token'], '')
     user_info = google.get('userinfo')
-    # Save user_info to the database or use it as needed
     flash('Logged in as: ' + user_info.data['email'])
     return redirect(url_for('home'))
 
@@ -61,23 +67,15 @@ def authorized():
 def get_google_oauth_token():
     return session.get('google_token')
 
-@app.route('/callback')
-def callback():
-    # Handle OAuth callback here
-    # Example: exchange code for access token
-    return redirect(url_for('home'))
-
 @app.route('/generate_recipe', methods=['GET', 'POST'])
 def generate_recipe():
     if request.method == 'POST':
-        # Extract ingredients from the form
         ingredients = request.form.get('ingredients')
-
-        # Make a call to the Edamam API
         edamam_data = requests.get(f'https://api.edamam.com/search?q={ingredients}&app_id=YOUR_APP_ID&app_key=YOUR_APP_KEY').json()
 
-        # Store data in MongoDB
-        mongo.db.recipes.insert_one({'edamam': edamam_data, 'ingredients': ingredients})
+        new_recipe = Recipe(ingredients=ingredients, edamam_data=edamam_data)
+        db.session.add(new_recipe)
+        db.session.commit()
 
         return render_template('recipe_result.html', edamam_data=edamam_data)
 
