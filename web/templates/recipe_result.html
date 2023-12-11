@@ -9,8 +9,18 @@
 <body>
     <h1>Recipe Result</h1>
 
-    <!-- Display recipe data here -->
-    <pre>{{ recipe_data | tojson }}</pre>
+    {% if recipes %}
+        {% for recipe in recipes %}
+            <div class="recipe">
+                <h2>{{ recipe['recipe']['label'] }}</h2>
+                <img src="{{ recipe['recipe']['image'] }}" alt="{{ recipe['recipe']['label'] }}">
+                <p>Ingredients: {{ recipe['recipe']['ingredientLines'] | join(', ') }}</p>
+                <!-- Add more details as needed -->
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No recipes found.</p>
+    {% endif %}
 
     <p><a href="{{ url_for('home') }}">Back to Home</a></p>
 </body>

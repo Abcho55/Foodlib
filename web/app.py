@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_oauthlib.client import OAuth
+from authlib.integrations.flask_client import OAuth
 import requests
 import os
+from datetime import datetime
 from dotenv import load_dotenv
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -18,7 +20,6 @@ app.config['NUTRITION_SEARCH_KEY'] = os.getenv('NUTRITION_SEARCH_KEY')
 
 db = SQLAlchemy(app)
 
-# Define the Recipe model
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ingredients = db.Column(db.String(500))
@@ -27,22 +28,24 @@ class Recipe(db.Model):
 class Nutrition(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nutrition = db.Column(db.String(500))
-    nutition_data = db.Column(db.JSON)
+    nutrition_data = db.Column(db.JSON)
 
 oauth = OAuth(app)
-google = oauth.remote_app(
-    'google',
-    consumer_key=app.config['GOOGLE_ID'],
-    consumer_secret=app.config['GOOGLE_SECRET'],
-    request_token_params={
-        'scope': 'email',
-    },
-    base_url='https://www.googleapis.com/oauth2/v1/',
-    request_token_url=None,
-    access_token_method='POST',
+google = oauth.register(
+    name='google',
+    client_id=app.config['GOOGLE_ID'],
+    client_secret=app.config['GOOGLE_SECRET'],
     access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
     authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    client_kwargs={'scope': 'email'}
 )
+
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
 
 @app.route('/')
 def home():
@@ -50,7 +53,8 @@ def home():
 
 @app.route('/login')
 def login():
-    return google.authorize(callback=url_for('authorized', _external=True))
+    redirect_uri = url_for('authorized', _external=True)
+    return google.authorize_redirect(redirect_uri)
 
 @app.route('/logout')
 def logout():
@@ -59,22 +63,52 @@ def logout():
 
 @app.route('/login/authorized')
 def authorized():
-    response = google.authorized_response()
-    if response is None or response.get('access_token') is None:
+    token = google.authorize_access_token()
+    if not token:
         flash('Access denied: reason={} error={}'.format(
             request.args['error_reason'],
             request.args['error_description']
         ))
         return redirect(url_for('home'))
 
-    session['google_token'] = (response['access_token'], '')
-    user_info = google.get('userinfo')
-    flash('Logged in as: ' + user_info.data['email'])
+    session['google_token'] = token
+    resp = google.get('userinfo')
+    user_info = resp.json()
+    session['user_info'] = user_info
+    flash('Logged in as: ' + user_info['email'])
     return redirect(url_for('home'))
 
-@google.tokengetter
-def get_google_oauth_token():
-    return session.get('google_token')
+@app.route('/dietary-preferences')
+def dietary_preferences():
+    return render_template('dietary-preferences.html')
+
+@app.route('/ingredient-management')
+def ingredient_management():
+    # Your logic here
+    return render_template('ingredient-management.html')  
+
+@app.route('/meal-planning')
+def meal_planning():
+    return render_template('meal-planning.html')
+
+@app.route('/nutrition-result')
+def nutrition_result():
+    # Logic to fetch and pass nutrition data to the template
+    return render_template('nutrition-result.html', nutrition_data={})
+
+@app.route('/nutritional-information')
+def nutritional_information():
+    return render_template('nutritional-information.html')
+
+@app.route('/recipe-result')
+def recipe_result():
+    # Add logic for recipe exploration page
+    return render_template('recipe-result.html')
+
+@app.route('/recipe-exploration')
+def recipe_exploration():
+    # Add logic for recipe exploration page
+    return render_template('recipe-exploration.html')
 
 @app.route('/generate_recipe', methods=['GET', 'POST'])
 def generate_recipe():
@@ -82,13 +116,15 @@ def generate_recipe():
         app_id = app.config['RECIPE_SEARCH_ID']
         app_key = app.config['RECIPE_SEARCH_KEY']
         ingredients = request.form.get('ingredients')
-        recipe_data = requests.get(f'https://api.edamam.com/api/recipes/v2?type=public&q={ingredients}&app_id={app_id}&app_key={app_key}').json()
+        response = requests.get(f'https://api.edamam.com/api/recipes/v2?type=public&q={ingredients}&app_id={app_id}&app_key={app_key}')
+        recipe_data = response.json()
 
         new_recipe = Recipe(ingredients=ingredients, recipe_data=recipe_data)
         db.session.add(new_recipe)
         db.session.commit()
 
-        return render_template('recipe_result.html', recipe_data=recipe_data)
+        recipes = recipe_data.get('hits', [])
+        return render_template('recipe_result.html', recipes=recipes)
 
     return render_template('index.html')
 
@@ -98,7 +134,8 @@ def generate_nutrition():
         app_id = app.config['NUTRITION_SEARCH_ID']
         app_key = app.config['NUTRITION_SEARCH_KEY']
         nutrition = request.form.get('nutrition')
-        nutrition_data = requests.get(f'https://api.edamam.com/api/nutrition-data?q={nutrition}&app_id={app_id}&app_key={app_key}').json()
+        response = requests.get(f'https://api.edamam.com/api/nutrition-data?q={nutrition}&app_id={app_id}&app_key={app_key}')
+        nutrition_data = response.json()
 
         new_nutrition = Nutrition(nutrition=nutrition, nutrition_data=nutrition_data)
         db.session.add(new_nutrition)
@@ -107,6 +144,7 @@ def generate_nutrition():
         return render_template('nutrition_result.html', nutrition_data=nutrition_data)
     return render_template('index.html')
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, use_reloader=True)

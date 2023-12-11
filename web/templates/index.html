@@ -2,24 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodlib</title>
+    <title>Foodlib - Discover Culinary Delights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Welcome to Foodlib </h1>
+    <!-- Header Section -->
+    <header>
+        <div class="header-content">
+            <h1>Foodlib</h1>
+            <p>Your ultimate culinary companion</p>
+        </div>
+    </header>
+    
+    <!-- Navigation Section -->
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('recipe_exploration') }}">Explore Recipes</a></li>
+            <li><a href="{{ url_for('ingredient_management') }}">Manage Ingredients</a></li>
+            <li><a href="{{ url_for('nutritional_information') }}">Nutritional Guide</a></li>
+            <li><a href="{{ url_for('meal_planning') }}">Plan Your Meals</a></li>
+            <li><a href="{{ url_for('dietary_preferences') }}">Diet Preferences</a></li>
+        </ul>
+    </nav>
 
-    {% if g.user %}
-        <p>Logged in as: {{ g.user.email }}</p>
-        <p><a href="{{ url_for('logout') }}">Logout</a></p>
-    {% else %}
-        <p><a href="{{ url_for('login') }}">Login with Google</a></p>
-    {% endif %}
+    <!-- Main Content Section -->
+    <main>
+        <section class="feature" id="recipe-exploration">
+            <h2>Discover Recipes</h2>
+            <p>Explore an extensive collection of recipes tailored to various cuisines and dietary needs.</p>
+        </section>
 
-    <form action="{{ url_for('generate_recipe') }}" method="post">
-        <label for="ingredients">Enter ingredients (comma-separated):</label>
-        <input type="text" id="ingredients" name="ingredients" required>
-        <button type="submit">Generate Recipe</button>
-    </form>
+        <section class="feature" id="ingredient-management">
+            <h2>Ingredient Wizard</h2>
+            <p>Enter your available ingredients and let Foodlib suggest innovative recipes.</p>
+        </section>
+
+        <section class="feature" id="nutritional-information">
+            <h2>Nutrition Insights</h2>
+            <p>Get detailed nutritional information to make informed dietary choices.</p>
+        </section>
+
+        <section class="feature" id="meal-planning">
+            <h2>Meal Planning Made Easy</h2>
+            <p>Organize your weekly meals efficiently with our customizable meal planner.</p>
+        </section>
+
+        <section class="feature" id="dietary-preferences">
+            <h2>Personalized Diet Options</h2>
+            <p>Explore recipes that cater to your specific dietary preferences, be it vegan, keto, or gluten-free.</p>
+        <!-- Link to Ingredient Management -->
+        <section>
+            <h2>Ingredient Management</h2>
+            <p>Enter your ingredients and find out what you can cook!</p>
+            <a href="{{ url_for('ingredient_management') }}">Manage Ingredients</a>
+        </section>
+
+        <!-- Link to Nutritional Information -->
+        <section>
+            <h2>Nutritional Information</h2>
+            <p>Discover the nutritional value of various foods.</p>
+            <a href="{{ url_for('nutritional_information') }}">Nutrition Info</a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ current_year }} Foodlib. All rights reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

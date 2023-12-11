@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodlib - Ingredient Management</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff; /* White background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        header {
+            background-color: #d32f2f; /* Dark red header background */
+            padding: 20px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #fff; /* White header text */
+            font-size: 2em;
+            margin: 0;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the ingredient management UI */
+        .ingredient-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            width: 80%; /* Adjusted width for the ingredient container */
+        }
+
+        textarea {
+            width: 100%; /* Full width for the text area */
+            height: 200px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .border-bottom {
+            border-bottom: 2px solid #d32f2f; /* Dark red border under the button */
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the ingredient cards */
+        .ingredient-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .ingredient-card {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .ingredient-card h3 {
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ingredient Management</h1>
+    </header>
+
+    <p>Input available ingredients, and Foodlib suggests recipes based on what's on hand. Reduce food waste and encourage culinary creativity in the kitchen.</p>
+
+    <!-- Ingredient Management UI -->
+    <div class="ingredient-container">
+        <!-- Recipe Generation Form -->
+        <form action="{{ url_for('generate_recipe') }}" method="post">
+            <textarea name="ingredients" placeholder="Enter ingredients separated by commas" required></textarea>
+            <button type="submit" class="border-bottom">Find Recipes</button>
+        </form>
+    </div>
+
+    <!-- Ingredient Cards Section -->
+    <div class="ingredient-cards" id="ingredient-cards">
+        <!-- Ingredient cards will appear here dynamically -->
+    </div>
+
+    <script>
+        // Dummy function to simulate adding ingredients
+        function addIngredients() {
+            const ingredientsTextArea = document.querySelector('textarea');
+            const ingredients = ingredientsTextArea.value.split(',').map(ingredient => ingredient.trim());
+            const ingredientCardsContainer = document.getElementById("ingredient-cards");
+
+            // Clear previous ingredient cards
+            ingredientCardsContainer.innerHTML = "";
+
+            // Display ingredient cards
+            for (const ingredient of ingredients) {
+                if (ingredient !== "") { // Skip empty ingredients
+                    const card = document.createElement("div");
+                    card.classList.add("ingredient-card");
+
+                    const heading = document.createElement("h3");
+                    heading.textContent = ingredient;
+
+                    card.appendChild(heading);
+
+                    ingredientCardsContainer.appendChild(card);
+                }
+            }
+        }
+    </script>
+
+    <!-- Add more content and styling as needed -->
+
+</body>
+</html>

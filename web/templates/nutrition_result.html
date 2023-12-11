@@ -5,12 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutrition Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Nutrition Result</h1>
 
-    <pre>{{ nutrition_data | tojson }}</pre>
+    {% if nutrition_data %}
+        <div class="nutrition-info">
+            <!-- You will need to adjust the keys based on the structure of your nutrition_data -->
+            <p>Calories: {{ nutrition_data['calories'] }}</p>
+            <p>Fat: {{ nutrition_data['totalNutrients']['FAT']['quantity'] }} {{ nutrition_data['totalNutrients']['FAT']['unit'] }}</p>
+            <p>Carbohydrates: {{ nutrition_data['totalNutrients']['CHOCDF']['quantity'] }} {{ nutrition_data['totalNutrients']['CHOCDF']['unit'] }}</p>
+            <!-- Add more nutrition info as needed -->
+        </div>
+    {% else %}
+        <p>No nutrition information found.</p>
+    {% endif %}
 
     <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
