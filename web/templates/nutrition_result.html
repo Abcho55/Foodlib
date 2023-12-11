@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Result</title>
+    <title>Nutrition Result</title>
 </head>
 <body>
-    <h1>Recipe Result</h1>
+    <h1>Nutrition Result</h1>
 
-    <!-- Display recipe data here -->
-    <pre>{{ recipe_data | tojson }}</pre>
+    <pre>{{ nutrition_data | tojson }}</pre>
 
     <p><a href="{{ url_for('home') }}">Back to Home</a></p>
 </body>
