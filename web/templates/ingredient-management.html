@@ -80,13 +80,30 @@
             color: #872222;
             margin-bottom: 10px;
         }
+
+        /* Styling for the "Home Page" button and "Find Recipes" submit button */
+        .home-button button, .border-bottom {
+            padding: 15px 30px; /* Adjust padding for height and width */
+            background-color: #872222;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+            margin-right: 10px; /* Add margin to the right to create space */
+        }
+
+        .home-button button:hover, .border-bottom:hover {
+            background-color: #b71c1c;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Ingredient Management</h1>
-    </header>
+    </header>    
 
     <p>Input available ingredients, and Foodlib suggests recipes based on what's on hand. Reduce food waste and encourage culinary creativity in the kitchen.</p>
 
@@ -98,11 +115,24 @@
             <button type="submit" class="border-bottom">Find Recipes</button>
         </form>
     </div>
-
+    <div class="home-button" style="padding-top: 20px;">
+        <a href="{{ url_for('home') }}"><button>Home Page</button></a>
+    </div>
     <!-- Ingredient Cards Section -->
     <div class="ingredient-cards" id="ingredient-cards">
         <!-- Ingredient cards will appear here dynamically -->
     </div>
+
+    <!-- Display flashed messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flashed-messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
     <script>
         // Dummy function to simulate adding ingredients

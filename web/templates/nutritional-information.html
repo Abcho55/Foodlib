@@ -13,36 +13,30 @@
             padding: 0;
             text-align: center;
         }
-
         header {
-            background-color: #872222; /* Dark red header background */
+            background-color: #872222;
             padding: 20px;
             width: 100%;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
         }
-
         h1 {
-            color: #fff; /* White header text */
+            color: #fff;
             font-size: 2em;
             margin: 0;
         }
-
         p {
             font-size: 1.2em;
             margin-bottom: 30px;
             color: #555;
         }
-
-        /* Styling for the nutritional information UI */
         .nutritional-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 30px;
         }
-
-        input {
-            width: 60%;
+        input[type="text"] {
+            width: 100%;
             padding: 15px;
             border: none;
             border-radius: 8px;
@@ -50,7 +44,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             font-size: 1em;
         }
-
         button {
             padding: 15px 30px;
             background-color: #872222;
@@ -61,22 +54,18 @@
             transition: background-color 0.3s ease;
             font-size: 1em;
         }
-
         button:hover {
             background-color: #b71c1c;
         }
-
-        /* Styling for the nutritional information display */
         .nutritional-info {
             margin-top: 30px;
-            text-align: left;
+            text-align: center;
+            display: none;
         }
-
         ul {
             list-style-type: none;
             padding: 0;
         }
-
         li {
             margin-bottom: 15px;
             color: #555;
@@ -90,45 +79,77 @@
         <h1>Nutritional Information</h1>
     </header>
 
-    <p>Get detailed nutritional data for each recipe, empowering you to make informed choices about your meals. Suitable for calorie counting, macro tracking, and adherence to specific dietary plans.</p>
+    <p>Get detailed nutritional data for each recipe, empowering you to make informed choices about your meals. Suitable for calorie counting and macro tracking.</p>
+    <p>Please include the quantity and type of food item for accurate nutritional data.</p>
 
-    <!-- Nutritional Information UI -->
+    <!-- Nutritional Information Form -->
     <div class="nutritional-container">
-        <input type="text" placeholder="Enter ingredients separated by commas...">
-        <button onclick="getNutritionalInfo()">Get Nutritional Info</button>
+        <form action="{{ url_for('nutritional_information') }}" method="post">
+            <input type="text" name="nutrition" placeholder="Example: 2 cups of rice or 100g of chicken breast...">
+            <button type="submit">Get Nutritional Info</button>
+        </form>
     </div>
+    <div class="home-button" style="padding-top: 40px;">
+        <a href="{{ url_for('home') }}"><button>Home Page</button></a>
+    </div>
+
+    <!-- Display flashed messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flashed-messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
     <!-- Nutritional Information Display Section -->
-    <div class="nutritional-info" id="nutritional-info">
-        <!-- Nutritional information will appear here dynamically -->
+    <div class="nutritional-info" style="{{ 'display: block;' if data_available else 'display: none;' }}">
+        {% if nutrition_data %}
+            <ul>
+                {% if 'calories' in nutrition_data %}
+                    <li>Calories: {{ nutrition_data['calories'] }}</li>
+                {% else %}
+                    <li>Calories: Not available</li>
+                {% endif %}
+
+                {% if 'FAT' in nutrition_data['totalNutrients'] %}
+                    <li>Fat: {{ nutrition_data['totalNutrients']['FAT']['quantity']|round(2) }} {{ nutrition_data['totalNutrients']['FAT']['unit'] }}</li>
+                {% else %}
+                    <li>Fat: Not available</li>
+                {% endif %}
+
+                {% if 'CHOCDF' in nutrition_data['totalNutrients'] %}
+                    <li>Carbohydrates: {{ nutrition_data['totalNutrients']['CHOCDF']['quantity']|round(2) }} {{ nutrition_data['totalNutrients']['CHOCDF']['unit'] }}</li>
+                {% else %}
+                    <li>Carbohydrates: Not available</li>
+                {% endif %}
+
+                {% if 'FIBTG' in nutrition_data['totalNutrients'] %}
+                    <li>Fiber: {{ nutrition_data['totalNutrients']['FIBTG']['quantity']|round(2) }} {{ nutrition_data['totalNutrients']['FIBTG']['unit'] }}</li>
+                {% else %}
+                    <li>Fiber: Not available</li>
+                {% endif %}
+
+                {% if 'PROCNT' in nutrition_data['totalNutrients'] %}
+                    <li>Protein: {{ nutrition_data['totalNutrients']['PROCNT']['quantity']|round(2) }} {{ nutrition_data['totalNutrients']['PROCNT']['unit'] }}</li>
+                {% else %}
+                    <li>Protein: Not available</li>
+                {% endif %}
+
+                {% if 'SUGAR' in nutrition_data['totalNutrients'] %}
+                    <li>Sugars: {{ nutrition_data['totalNutrients']['SUGAR']['quantity']|round(2) }} {{ nutrition_data['totalNutrients']['SUGAR']['unit'] }}</li>
+                {% else %}
+                    <li>Sugars: Not available</li>
+                {% endif %}
+
+                <!-- Add more nutritional info as needed -->
+            </ul>
+        {% else %}
+            <p>No nutrition information found.</p>
+        {% endif %}
     </div>
-
-    <script>
-        // Dummy function to simulate nutritional information retrieval
-        function getNutritionalInfo() {
-            const nutritionalInfo = {
-                calories: 350,
-                protein: 25,
-                carbs: 40,
-                fat: 12,
-                fiber: 5,
-            };
-            const nutritionalInfoContainer = document.getElementById("nutritional-info");
-
-            // Clear previous information
-            nutritionalInfoContainer.innerHTML = "";
-
-            // Display nutritional information
-            const ul = document.createElement("ul");
-            for (const [nutrient, value] of Object.entries(nutritionalInfo)) {
-                const li = document.createElement("li");
-                li.textContent = `${nutrient}: ${value}g`;
-                ul.appendChild(li);
-            }
-
-            nutritionalInfoContainer.appendChild(ul);
-        }
-    </script>
 
     <!-- Add more content and styling as needed -->
 

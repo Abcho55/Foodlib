@@ -21,6 +21,13 @@
             <li><a href="{{ url_for('home') }}">Home</a></li>
             <li><a href="{{ url_for('ingredient_management') }}">Manage Ingredients</a></li>
             <li><a href="{{ url_for('nutritional_information') }}">Nutritional Guide</a></li>
+            <!-- Login/Logout links -->
+            {% if 'user_info' not in session %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% else %}
+                <li>Welcome, {{ session['user_info']['email'] }}</li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
         </ul>
     </nav>
 
