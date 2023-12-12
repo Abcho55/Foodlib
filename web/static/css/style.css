@@ -83,6 +83,10 @@ section {
     margin-bottom: 30px;
 }
 
+.nutrition-info {
+    margin: 20px;
+}
+
 footer {
     background-color: rgba(0, 0, 0, 0.7); /* Dark background for contrast */
     color: white;
