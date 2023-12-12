@@ -19,52 +19,34 @@
     <nav>
         <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('recipe_exploration') }}">Explore Recipes</a></li>
             <li><a href="{{ url_for('ingredient_management') }}">Manage Ingredients</a></li>
             <li><a href="{{ url_for('nutritional_information') }}">Nutritional Guide</a></li>
-            <li><a href="{{ url_for('meal_planning') }}">Plan Your Meals</a></li>
-            <li><a href="{{ url_for('dietary_preferences') }}">Diet Preferences</a></li>
         </ul>
     </nav>
 
     <!-- Main Content Section -->
     <main>
-        <section class="feature" id="recipe-exploration">
-            <h2>Discover Recipes</h2>
-            <p>Explore an extensive collection of recipes tailored to various cuisines and dietary needs.</p>
-        </section>
+        <div class="content-container">
+            <!-- Introduction to Foodlib -->
+            <section class="introduction">
+                <h2>Welcome to Foodlib!</h2>
+                <p>At Foodlib, we're passionate about making culinary exploration and nutrition management accessible to everyone. Whether you're a seasoned chef or a beginner in the kitchen, our platform provides the tools you need to discover and create delicious meals while staying informed about the nutritional content of your food.</p>
+            </section>
 
-        <section class="feature" id="ingredient-management">
-            <h2>Ingredient Wizard</h2>
-            <p>Enter your available ingredients and let Foodlib suggest innovative recipes.</p>
-        </section>
+            <!-- How to Manage Ingredients -->
+            <section class="manage-ingredients">
+                <h2>Manage Ingredients Feature</h2>
+                <p>With our Ingredient Wizard, simply enter the ingredients you have on hand, and we'll suggest a variety of recipes to inspire your next meal. It's the perfect way to reduce food waste and discover new dishes!</p>
+                <a href="{{ url_for('ingredient_management') }}" class="btn">Start Managing Ingredients</a>
+            </section>
 
-        <section class="feature" id="nutritional-information">
-            <h2>Nutrition Insights</h2>
-            <p>Get detailed nutritional information to make informed dietary choices.</p>
-        </section>
-
-        <section class="feature" id="meal-planning">
-            <h2>Meal Planning Made Easy</h2>
-            <p>Organize your weekly meals efficiently with our customizable meal planner.</p>
-        </section>
-
-        <section class="feature" id="dietary-preferences">
-            <h2>Personalized Diet Options</h2>
-            <p>Explore recipes that cater to your specific dietary preferences, be it vegan, keto, or gluten-free.</p>
-        <!-- Link to Ingredient Management -->
-        <section>
-            <h2>Ingredient Management</h2>
-            <p>Enter your ingredients and find out what you can cook!</p>
-            <a href="{{ url_for('ingredient_management') }}">Manage Ingredients</a>
-        </section>
-
-        <!-- Link to Nutritional Information -->
-        <section>
-            <h2>Nutritional Information</h2>
-            <p>Discover the nutritional value of various foods.</p>
-            <a href="{{ url_for('nutritional_information') }}">Nutrition Info</a>
-        </section>
+            <!-- How to Use Nutritional Guide -->
+            <section class="nutritional-guide">
+                <h2>Nutritional Guide</h2>
+                <p>Our Nutritional Guide offers detailed information on the calories, vitamins, and minerals in your meals, empowering you to make healthier food choices. Track your dietary needs and balance your meals with ease.</p>
+                <a href="{{ url_for('nutritional_information') }}" class="btn">Explore Nutritional Information</a>
+            </section>
+        </div>
     </main>
 
     <!-- Footer -->

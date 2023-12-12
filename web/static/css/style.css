@@ -2,23 +2,21 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
+    background-image: url('../images/food.jpeg'); /* Add your image path here */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     position: relative;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
 body::before {
     content: "";
-    background-image: url('IMG_8141.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 1; /* Adjust the opacity as needed */
+    opacity: 0.5; /* Adjust the opacity as needed for transparency */
     z-index: -1;
 }
 
@@ -29,14 +27,13 @@ header, nav, main, footer {
 }
 
 header {
-    background-color: rgba(224, 15, 15, 0.9);
-    padding: 40px; /* Increased padding for more prominence */
+    background-color: #872222; /* Solid background color for the header */
+    padding: 1px;
     text-align: center;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* More pronounced shadow */
-    font-size: 2em; /* Larger font size */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
-    border-radius: 15px; /* Rounded corners */
-    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); /* Increased text shadow for better visibility */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    font-size: 2em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
 }
 
 header h1 {
@@ -46,8 +43,8 @@ header h1 {
 
 header p {
     margin-top: 10px; /* Add margin to separate h1 and p */
+    margin-bottom: 15px;
     font-size: 1.2em; /* Larger font size for the subtext */
-    
     text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); /* Adjusted text shadow for subtext */
 }
 
@@ -71,25 +68,41 @@ nav a {
     font-weight: bold;
 }
 
+.content-container {
+    background-color: #fff; /* Solid white background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Padding around the content */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    margin-top: 20px; /* Space above the content container */
+    margin-bottom: 20px; /* Space below the content container */
+    position: relative; /* Position relative for stacking context */
+    z-index: 2; /* Higher than the body::before pseudo-element */
+    color: #333; /* Dark color for text */
+    text-shadow: none; /* Remove any text shadow for better legibility */
+}
+
 main {
+    width: 80%;
+    margin: 20px auto; /* Center the main content */
     padding: 20px;
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.8); /* Light background for contrast */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
-    border-radius: 10px; /* Add some rounded corners */
+    border-radius: 10px;
+    background-color: #fff; /* Solid white background for the content */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
 section {
-    margin-bottom: 30px;
+    margin-bottom: 100px;
 }
 
 footer {
-    background-color: rgba(0, 0, 0, 0.7); /* Dark background for contrast */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background color for the footer */
     color: white;
     text-align: center;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    z-index: 1;
+    padding: 5px;
+    font-size: 12px;
+    position: relative; /* Changed to relative if you want it to follow the natural flow */
+    width: 100%; /* Ensure it spans the full width */
+    z-index: 1; /* Above the main content, under the header */
 }

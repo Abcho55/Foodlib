@@ -78,18 +78,18 @@ def authorized():
     flash('Logged in as: ' + user_info['email'])
     return redirect(url_for('home'))
 
-@app.route('/dietary-preferences')
-def dietary_preferences():
-    return render_template('dietary-preferences.html')
+# @app.route('/dietary-preferences')
+# def dietary_preferences():
+#     return render_template('dietary-preferences.html')
 
 @app.route('/ingredient-management')
 def ingredient_management():
     # Your logic here
     return render_template('ingredient-management.html')  
 
-@app.route('/meal-planning')
-def meal_planning():
-    return render_template('meal-planning.html')
+# @app.route('/meal-planning')
+# def meal_planning():
+#     return render_template('meal-planning.html')
 
 @app.route('/nutrition-result')
 def nutrition_result():
@@ -105,10 +105,10 @@ def recipe_result():
     # Add logic for recipe exploration page
     return render_template('recipe-result.html')
 
-@app.route('/recipe-exploration')
-def recipe_exploration():
-    # Add logic for recipe exploration page
-    return render_template('recipe-exploration.html')
+# @app.route('/recipe-exploration')
+# def recipe_exploration():
+#     # Add logic for recipe exploration page
+#     return render_template('recipe-exploration.html')
 
 @app.route('/generate_recipe', methods=['GET', 'POST'])
 def generate_recipe():
