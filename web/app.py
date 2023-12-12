@@ -112,14 +112,28 @@ def recipe_result():
 #     # Add logic for recipe exploration page
 #     return render_template('recipe-exploration.html')
 
-def correct_spelling(ingredients):
+def correct_spelling(ingredient_list):
     spell = SpellChecker()
     corrected_ingredients = []
-    for ingredient in ingredients:
-        words = ingredient.split()  # Split by spaces to check each word in the ingredient
-        misspelled = spell.unknown(words)
-        corrected = [spell.correction(word) if word in misspelled else word for word in words]
-        corrected_ingredients.append(' '.join(corrected))
+
+    for ingredient in ingredient_list:
+        # Split the ingredient into words
+        words = ingredient.split()
+        corrected_words = []
+
+        for word in words:
+            # If the word contains digits, it's likely a quantity or unit, so we don't spellcheck it
+            if any(char.isdigit() for char in word):
+                corrected_words.append(word)
+            else:
+                # Spellcheck the word and append the possibly corrected version
+                misspelled = spell.unknown([word])
+                corrected = spell.correction(word) if misspelled else word
+                corrected_words.append(corrected)
+
+        # Rejoin the corrected words into a single string
+        corrected_ingredients.append(' '.join(corrected_words))
+    
     return corrected_ingredients
 
 @app.route('/ingredient-management', methods=['GET', 'POST'])
@@ -164,7 +178,6 @@ def nutritional_information():
         app_key = app.config['NUTRITION_SEARCH_KEY']
         nutrition = request.form.get('nutrition')
         nutrition_list = [nutr.strip() for nutr in nutrition.split(',')]  # Split by commas and strip whitespace
-        
         corrected_nutrition = correct_spelling(nutrition_list)
         corrected_nutrition_str = ', '.join(corrected_nutrition)  # Rejoin the list into a string
 
